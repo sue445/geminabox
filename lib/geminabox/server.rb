@@ -113,7 +113,7 @@ module Geminabox
     end
 
     get '/gems/:gemname.svg' do
-      gems = Hash[load_gems.by_name]
+      gems = Hash[load_param_gem.by_name]
       @gem = gems[params[:gemname]]
       halt 404 unless @gem
       erb :"gem_badge.svg", :layout => false, :content_type => "image/svg+xml"
@@ -252,6 +252,11 @@ HTML
 
     def load_gems
       @loaded_gems ||= Geminabox::GemVersionCollection.new(all_gems)
+    end
+
+    def load_param_gem
+      gem_versions = Geminabox::GemFinder.find_by_name(params[:gemname])
+      Geminabox::GemVersionCollection.new(gem_versions)
     end
 
     def index_gems(gems)
