@@ -256,6 +256,7 @@ HTML
 
     def load_param_gem
       gem_versions = Geminabox::GemFinder.find_by_name(params[:gemname])
+      gem_versions.select! { |gem_version| Gem::Version.correct?(gem_version.number) }
       Geminabox::GemVersionCollection.new(gem_versions)
     end
 
